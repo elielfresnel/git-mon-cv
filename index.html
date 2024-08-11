@@ -3,36 +3,157 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css">
+    <title>QR Code Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #4CAF50;
+            color: white;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4CAF50;
+            text-align: center;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            margin-right: 10px;
+        }
+        #qrcode {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .options {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .options > div {
+            flex: 1;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>QR Code Generator</h1>
+        <div class="input-group">
+            <label for="content-type">Content Type:</label>
+            <select id="content-type">
+                <option value="url">URL</option>
+                <option value="text">Text</option>
+                <option value="email">Email</option>
+                <option value="phone">Phone</option>
+            </select>
+        </div>
+        <div class="input-group">
+            <label for="content">Enter content for QR code:</label>
+            <input type="text" id="content" placeholder="Enter content based on selected type">
+        </div>
+        <div class="options">
+            <div>
+                <label for="qr-size">QR Code Size:</label>
+                <input type="number" id="qr-size" value="200" min="100" max="400">
+            </div>
+            <div>
+                <label for="qr-color">QR Code Color:</label>
+                <input type="color" id="qr-color" value="#000000">
+            </div>
+            <div>
+                <label for="qr-bg-color">Background Color:</label>
+                <input type="color" id="qr-bg-color" value="#ffffff">
+            </div>
+        </div>
+        <button onclick="generateQR()">Generate QR Code</button>
+        <button onclick="downloadQR()">Download QR Code</button>
+        <div id="qrcode"></div>
+    </div>
 
+    <script>
+        let qrcode = null;
 
-<<<<<<< HEAD
-    <section>
-        <h2>Description</h2>
-        <p>Je suis un passionné de sécurité informatique</p>
-    </section>
-=======
-    <h2>
-        <li>
-            <ol>Tests d'intrusions dans les systèmes infformatiques</ol>
-            <ol>Maitrise du CMS Wordpress</ol>
-            <ol>Maitrise de quelques languages de programmation</ol>
-        </li>
-    </h2>
->>>>>>> compétences
-    
-    
+        function generateQR() {
+            const content = document.getElementById('content').value;
+            const size = document.getElementById('qr-size').value;
+            const color = document.getElementById('qr-color').value;
+            const bgColor = document.getElementById('qr-bg-color').value;
 
-    <h2>Formations</h2>
-    <p>
-        <li>Formation en développement web avec les languages tels que Python , C , Java , PHP , HTML , CSS</li>
-        <li>Certification CEH </li>
-        <li>Certification OCSP</li>
-        <li>Certification OWASP</li>
-    </p>
+            if (content) {
+                if (qrcode) {
+                    qrcode.clear();
+                }
+                qrcode = new QRCode("qrcode", {
+                    text: content,
+                    width: size,
+                    height: size,
+                    colorDark: color,
+                    colorLight: bgColor,
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+            } else {
+                alert("Please enter content for the QR code");
+            }
+        }
 
+        function downloadQR() {
+            if (qrcode) {
+                const canvas = document.querySelector("#qrcode canvas");
+                const image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+                const link = document.createElement('a');
+                link.download = 'qrcode.png';
+                link.href = image;
+                link.click();
+            } else {
+                alert("Please generate a QR code first");
+            }
+        }
+
+        document.getElementById('content-type').addEventListener('change', function() {
+            const contentInput = document.getElementById('content');
+            switch(this.value) {
+                case 'url':
+                    contentInput.placeholder = "Enter a URL (e.g., https://example.com)";
+                    break;
+                case 'text':
+                    contentInput.placeholder = "Enter your text here";
+                    break;
+                case 'email':
+                    contentInput.placeholder = "Enter an email address";
+                    break;
+                case 'phone':
+                    contentInput.placeholder = "Enter a phone number";
+                    break;
+            }
+        });
+    </script>
 </body>
 </html>
